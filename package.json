@@ -4,7 +4,7 @@
   "description": "A Node-Red plugin that usese the offical Ecoflow API to get data for some supported ecoflow devices.",
   "main": "ecoflow-api.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node ./ecoflow-api.js"
   },
   "repository": {
     "type": "git",
@@ -17,9 +17,12 @@
   ],
   "author": "Shaoranlaos",
   "license": "ISC",
-  "node-red" : {
+  "node-red": {
     "nodes": {
       "Ecoflow API": "ecoflow-api.js"
-     }
+    }
+  },
+  "dependencies": {
+    "axios": "^1.7.2"
   }
 }
