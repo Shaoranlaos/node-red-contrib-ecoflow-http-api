@@ -1,6 +1,6 @@
 var should = require("should");
 var helper = require("node-red-node-test-helper");
-var lowerNode = require("../ecoflow-api-node.js");
+var lowerNode = require("../ecoflow-api-node");
 
 helper.init(require.resolve('node-red'));
 

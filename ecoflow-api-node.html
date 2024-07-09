@@ -4,11 +4,11 @@
         color: '#a6bbcf',
         defaults: {
             name: { value:"Ecoflow API", required: false },
-            serial_number: { required: false, validate: RED.validators.regex('[A-Z0-9]+') }
+            serial_number: { required: false }
         },
         credentials: {
-            access_key: { type: "text" },
-            secret_key: { type: "password" }
+            access_key: { type: "text", required: true },
+            secret_key: { type: "password", required: true }
         },
         inputs: 1,
         outputs: 1,
@@ -30,7 +30,7 @@
     </div>
     <div class="form-row">
         <label for="node-input-secret_key"><i class="fa fa-tag"></i> Secret Key</label>
-        <input type="password" id="node-input-secret_key" placeholder="Access Key">
+        <input type="password" id="node-input-secret_key" placeholder="Secret Key">
     </div>
     <div class="form-row">
         <label for="node-input-serial_number"><i class="fa fa-tag"></i> Serial Number</label>

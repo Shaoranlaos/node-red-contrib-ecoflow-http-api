@@ -1,6 +1,6 @@
 {
-  "name": "node-red-contrib-ecoflow-api",
-  "version": "0.1.0",
+  "name": "@shaoranlaos/node-red-contrib-ecoflow-api",
+  "version": "0.1.1",
   "description": "A Node-Red plugin that usese the offical Ecoflow API to get data for some supported ecoflow devices.",
   "main": "ecoflow-api.js",
   "scripts": {
@@ -11,13 +11,14 @@
     "url": "https://scm.shaoranlaos.de/scm/repo/shaoranlaos/node-red-contrib-ecoflow-api"
   },
   "keywords": [
-    "Node-Red",
-    "Plugin",
-    "Ecoflow"
+    "plugin",
+    "ecoflow",
+    "node-red"
   ],
   "author": "Shaoranlaos",
   "license": "ISC",
   "node-red": {
+    "version": ">=3.0.0",
     "nodes": {
       "Ecoflow API": "ecoflow-api-node.js"
     }
@@ -28,6 +29,6 @@
   "devDependencies": {
     "mocha": "^10.6.0",
     "node-red": "^4.0.2",
-    "node-red-node-test-helper": "^0.3.4"
+    "node-red-node-test-helper": "*"
   }
 }

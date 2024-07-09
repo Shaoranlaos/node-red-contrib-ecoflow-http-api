@@ -8,15 +8,21 @@ module.exports = function(RED) {
         var node = this;
         var ak = node.credentials.access_key;
         var sk = node.credentials.secret_key;
-        var sn = node.serial_number;
+        var sn = config.serial_number;
 
         ecoflowAPI.init(ak,sk);
         
         node.on('input', function(msg) {
-            msg.payload = queryQuotaAll(msg.payload == undefined ? sn : msg.payload);
-            node.send(msg);
+            ecoflowAPI.queryQuotaAll(sn ? sn : msg.payload, function (data) {
+                msg.payload = data;
+                node.send(msg);
+            });
         });
     }
 
-    RED.nodes.registerType("ecoflow-api", queryEcoflowApi);
+    RED.nodes.registerType("ecoflow-api", queryEcoflowApi, {
+        credentials: {
+            access_key: {type:"text"},
+            secret_key: {type:"password"}
+        }});
 }

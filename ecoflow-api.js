@@ -1,17 +1,17 @@
-module.exports = function() {
-    const axios = require('axios');
+const axios = require('axios');
+const http  = require('http')
 
-    const ecoflowAPI = 'https://api-e.ecoflow.com';
-    const request = axios.create({
-        baseURL: ecoflowAPI,
-        timeout: 5000,
-        httpAgent: new http.Agent({ keepAlive: true }),
-      });
+const ecoflowAPI = 'https://api-e.ecoflow.com';
+const request = axios.create({
+    baseURL: ecoflowAPI,
+    timeout: 5000,
+    httpAgent: new http.Agent({ keepAlive: true }),
+});
 
-    var accessKey;
-    var secretKey;
+var accessKey;
+var secretKey;
 
-function init(ak, sk) {
+exports.init = function(ak, sk) {
     accessKey = ak;
     secretKey = sk;
 }
@@ -50,7 +50,7 @@ function hmac(message) {
 }
 
 
-function EcoflowRequest(path, params) {
+function EcoflowRequest(path, params, resFunc) {
     var keys = Object.keys(params);
     sortedParams = new Map();
     keys.sort().forEach(k => sortedParams[k] = params[k]);
@@ -67,14 +67,15 @@ function EcoflowRequest(path, params) {
         timestamp: sortedParams.timestamp,
         sign: hmac(queryParams),
     };
-    //console.log(ecoflowAPI+path+'?'+queryParams);
-    //console.log(header);
+    console.log(ecoflowAPI+path+'?'+queryParams);
+    console.log(header);
     
     request.get(path, { headers:header, params: params })
         .then(function (response) {
             console.log(response.status);
+            console.log(response.data);
             if (response.status == 200) {
-                console.log(response.data);
+                resFunc(response.data.data);
             }
         })
         .catch(function(error) {
@@ -82,8 +83,6 @@ function EcoflowRequest(path, params) {
         });
 }
 
-function queryQuotaAll(sn) {
-    return EcoflowRequest("/iot-open/sign/device/quota/all", { sn: sn });
-}
-
+exports.queryQuotaAll = function(sn, resFunc) {
+    return EcoflowRequest("/iot-open/sign/device/quota/all", { sn: sn }, resFunc);
 }
