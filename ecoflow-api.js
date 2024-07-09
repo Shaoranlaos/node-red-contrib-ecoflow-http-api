@@ -1,8 +1,20 @@
+module.exports = function() {
+    const axios = require('axios');
 
+    const ecoflowAPI = 'https://api-e.ecoflow.com';
+    const request = axios.create({
+        baseURL: ecoflowAPI,
+        timeout: 5000,
+        httpAgent: new http.Agent({ keepAlive: true }),
+      });
 
-var ecoflowAPI = 'https://api-e.ecoflow.com';
-var accessKey = '';
-var secretKey = '';
+    var accessKey;
+    var secretKey;
+
+function init(ak, sk) {
+    accessKey = ak;
+    secretKey = sk;
+}
 
 const generateNonce = () => Math.floor(Math.random() * 1000000) + 1;
 const generateTimestamp = () => Date.now();
@@ -29,7 +41,7 @@ function toQueryParamMapping(params) {
         }}).join('&');
 }
 
-function hmac(secretKey, message, algorithm = "SHA-256") {
+function hmac(message) {
     var crypto = require('crypto');
     var hmac = crypto.createHmac('sha256', secretKey);
     data = hmac.update(message);
@@ -42,27 +54,23 @@ function EcoflowRequest(path, params) {
     var keys = Object.keys(params);
     sortedParams = new Map();
     keys.sort().forEach(k => sortedParams[k] = params[k]);
-    console.log(sortedParams);
 
     sortedParams.accessKey = accessKey;
     sortedParams.nonce = generateNonce();
     sortedParams.timestamp = generateTimestamp();
 
-    queryParams = toQueryParamMapping(sortedParams);    
-    console.log(queryParams);
+    queryParams = toQueryParamMapping(sortedParams);
 
-    var fullPath = ecoflowAPI+path+'?'+queryParams;
     var header = {
         accessKey: sortedParams.accessKey,
         nonce: sortedParams.nonce,
         timestamp: sortedParams.timestamp,
-        sign: hmac(secretKey, queryParams),
+        sign: hmac(queryParams),
     };
-    console.log(fullPath);
-    console.log(header);
+    //console.log(ecoflowAPI+path+'?'+queryParams);
+    //console.log(header);
     
-    var request = require('axios');
-    request.get(ecoflowAPI+path, { headers:header, params: params })
+    request.get(path, { headers:header, params: params })
         .then(function (response) {
             console.log(response.status);
             if (response.status == 200) {
@@ -74,4 +82,8 @@ function EcoflowRequest(path, params) {
         });
 }
 
-EcoflowRequest("/iot-open/sign/device/quota/all", { sn: "HW51ZOH4SF769935" });
+function queryQuotaAll(sn) {
+    return EcoflowRequest("/iot-open/sign/device/quota/all", { sn: sn });
+}
+
+}
