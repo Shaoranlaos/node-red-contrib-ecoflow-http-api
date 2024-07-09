@@ -21,3 +21,8 @@ request the information for this device and replace the message.payload with it.
 
 The output is formated as JSON.
 The details of the structure can be read under [Ecoflow API Documentation](https://developer-eu.ecoflow.com/us/document/generalInfo).
+
+## Getting Access Key and Secret Key
+
+The Credentials can be requested on the offical Ecoflow IoT Website: [Ecoflow OpenIoT](https://developer-eu.ecoflow.com).
+It can take up to a week for the account to be enabled.
