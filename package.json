@@ -1,6 +1,6 @@
 {
   "name": "@shaoranlaos/node-red-contrib-ecoflow-http-api",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "A Node-Red plugin that usese the offical Ecoflow HTTP-API to get data for some supported ecoflow devices.",
   "author": "Shaoranlaos",
   "main": "ecoflow-api.js",
@@ -22,6 +22,9 @@
     "nodes": {
       "Ecoflow API": "ecoflow-api-node.js"
     }
+  },
+  "engines": {
+    "node": ">=12.0.0"
   },
   "dependencies": {
     "axios": "^1.7.2"
