@@ -1,14 +1,14 @@
 {
-  "name": "@shaoranlaos/node-red-contrib-ecoflow-api",
+  "name": "@shaoranlaos/node-red-contrib-ecoflow-http-api",
   "version": "0.1.1",
-  "description": "A Node-Red plugin that usese the offical Ecoflow API to get data for some supported ecoflow devices.",
+  "description": "A Node-Red plugin that usese the offical Ecoflow HTTP-API to get data for some supported ecoflow devices.",
   "main": "ecoflow-api.js",
   "scripts": {
     "test": "mocha \"test/**/*_spec.js\""
   },
   "repository": {
     "type": "git",
-    "url": "https://scm.shaoranlaos.de/scm/repo/shaoranlaos/node-red-contrib-ecoflow-api"
+    "url": "https://github.com/Shaoranlaos/node-red-contrib-ecoflow-http-api"
   },
   "keywords": [
     "plugin",
