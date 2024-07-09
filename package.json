@@ -2,6 +2,7 @@
   "name": "@shaoranlaos/node-red-contrib-ecoflow-http-api",
   "version": "0.1.1",
   "description": "A Node-Red plugin that usese the offical Ecoflow HTTP-API to get data for some supported ecoflow devices.",
+  "author": "Shaoranlaos",
   "main": "ecoflow-api.js",
   "scripts": {
     "test": "mocha \"test/**/*_spec.js\""
@@ -15,8 +16,7 @@
     "ecoflow",
     "node-red"
   ],
-  "author": "Shaoranlaos",
-  "license": "ISC",
+  "license": "MIT",
   "node-red": {
     "version": ">=3.0.0",
     "nodes": {
