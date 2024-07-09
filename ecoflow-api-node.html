@@ -40,4 +40,22 @@
 
 <script type="text/html" data-help-name="ecoflow-api">
     <p>This node uses the offical Ecoflow HTTP-API to request device quotas.</p>
+
+    <h3>Inputs</h3>
+    <dl class="message-properties">
+        <dt>payload
+            <span class="property-type">json</span>
+        </dt>
+        <dd> the payload of the message to publish. </dd>
+    </dl>
+
+    <h3>Outputs</h3>
+     <ol class="node-ports">
+         <li>Standard output
+             <dl class="message-properties">
+                 <dt>payload <span class="property-type">string</span></dt>
+                 <dd>the standard output of the command.</dd>
+             </dl>
+         </li>
+     </ol>
 </script>

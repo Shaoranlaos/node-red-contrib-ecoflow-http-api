@@ -3,6 +3,9 @@
 A Node Red module that allows to use the offical Ecoflow HTTP API to read data from
 various supported Ecoflow Devices.
 
+The used HTTP endpoint is "/iot-open/sign/device/quota/all" which will get all available data for the
+requested device.
+
 ## Supported device types
 
 Because this module uses the standard HTTP API from Ecoflow it should support all
