@@ -19,12 +19,13 @@ module.exports = function(RED) {
         var func = fn ? fn : msg.function;
         var serialNumber = sn ? sn : msg.sn ? msg.sn : msg.payload;
 
-        outFunc = function(data) {
-            msg.payload = data;
-            this.send(msg);
-        }
-
         node.on('input', function(msg) {
+
+            outFunc = function(data) {
+                msg.payload = data;
+                this.send(msg);
+            }
+
             switch(func) {
                 case 'queryQuotaAll':
                     ecoflowAPI.queryQuotaAll(serialNumber, outFunc);
