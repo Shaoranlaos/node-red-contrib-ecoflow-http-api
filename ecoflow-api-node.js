@@ -16,10 +16,10 @@ module.exports = function(RED) {
 
         ecoflowAPI.init(ak,sk);
 
-        var func = fn ? fn : msg.function;
-        var serialNumber = sn ? sn : msg.sn ? msg.sn : msg.payload;
-
         node.on('input', function(msg) {
+
+            var func = fn ? fn : msg.function;
+            var serialNumber = sn ? sn : msg.sn ? msg.sn : msg.payload;
 
             outFunc = function(data) {
                 msg.payload = data;
