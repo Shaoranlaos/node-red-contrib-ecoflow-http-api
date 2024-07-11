@@ -51,9 +51,13 @@ function hmac(message) {
 
 
 function EcoflowRequest(path, params, resFunc) {
-    var keys = Object.keys(params);
-    sortedParams = new Map();
-    keys.sort().forEach(k => sortedParams[k] = params[k]);
+    if (!params) {
+        keys = Object.keys(params);
+        sortedParams = new Map();
+        keys.sort().forEach(k => sortedParams[k] = params[k]);
+    } else {
+        sortedParams = params;
+    }
 
     sortedParams.accessKey = accessKey;
     sortedParams.nonce = generateNonce();
@@ -84,5 +88,9 @@ function EcoflowRequest(path, params, resFunc) {
 }
 
 exports.queryQuotaAll = function(sn, resFunc) {
-    return EcoflowRequest("/iot-open/sign/device/quota/all", { sn: sn }, resFunc);
+    EcoflowRequest("/iot-open/sign/device/quota/all", { sn: sn }, resFunc);
+}
+
+exports.queryDeviceList = function(resFunc) {
+    EcoflowRequest("/iot-open/sign/device/list", {}, resFunc);
 }

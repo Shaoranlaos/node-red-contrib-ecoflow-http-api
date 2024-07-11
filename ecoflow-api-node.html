@@ -3,8 +3,9 @@
         category: 'function',
         color: '#a6bbcf',
         defaults: {
-            name: { value:"Ecoflow API", required: false },
-            serial_number: { required: false }
+            name: { value: "Ecoflow API", required: false },
+            serial_number: { required: false },
+            function: { value: "queryQuotaAll", required: false }
         },
         credentials: {
             access_key: { type: "text", required: true },
@@ -13,8 +14,19 @@
         inputs: 1,
         outputs: 1,
         icon: "ecoflow-logo.svg",
-        label: function() {
-            return this.name||'Ecoflow API';
+        label: () => this.name||'Ecoflow API',
+        oneditprepare: function() {
+            $("#node-input-function").typedInput({
+                types: [
+                    {
+                        value: "function",
+                        options: [
+                            { value: "queryQuotaAll", label: "query quotaAll of a device"},
+                            { value: "deviceList", label: "query the device list"}
+                        ]
+                    }
+                ]
+            })
         }
     });
 </script>
@@ -33,27 +45,38 @@
         <input type="password" id="node-input-secret_key" placeholder="Secret Key">
     </div>
     <div class="form-row">
+        <label for="node-input-function"><i class="fa fa-tag"></i> Function</label>
+        <input type="" id="node-input-function">
+    </div>
+    <div class="form-row">
         <label for="node-input-serial_number"><i class="fa fa-tag"></i> Serial Number</label>
         <input type="text" id="node-input-serial_number" placeholder="Serial Number">
     </div>
 </script>
 
 <script type="text/html" data-help-name="ecoflow-api">
-    <p>This node uses the offical Ecoflow HTTP-API to request device quotas.</p>
+    <p>This node uses the offical Ecoflow HTTP-API to make
+        request for ecoflow device data.</p>
 
     <h3>Inputs</h3>
     <dl class="message-properties">
-        <dt>payload
-            <span class="property-type">json</span>
+        <dt>sn
+            <span class="property-type">string</span>
         </dt>
-        <dd> the payload of the message to publish. </dd>
+        <dd> The serial number of the device to query. </dd>
+        <dt>function
+            <span class="property-type">string</span>
+        </dt>
+        <dd> The function to execute.<br/>
+             Can be one of ['queryQuotaAll','deviceList'].</dd>
     </dl>
 
     <h3>Outputs</h3>
      <ol class="node-ports">
          <li>Standard output
              <dl class="message-properties">
-                 <dt>payload <span class="property-type">string</span></dt>
+                 <dt>payload
+                    <span class="property-type">string</span></dt>
                  <dd>the standard output of the command.</dd>
              </dl>
          </li>
