@@ -23,7 +23,7 @@ module.exports = function(RED) {
 
             outFunc = function(data) {
                 msg.payload = data;
-                this.send(msg);
+                node.send(msg);
             }
 
             switch(func) {

@@ -51,7 +51,7 @@ function hmac(message) {
 
 
 function EcoflowRequest(path, params, resFunc) {
-    if (!params) {
+    if (params) {
         keys = Object.keys(params);
         sortedParams = new Map();
         keys.sort().forEach(k => sortedParams[k] = params[k]);
