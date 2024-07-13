@@ -1,0 +1,36 @@
+<script type="text/javascript">
+    RED.nodes.registerType('ecoflow-api-server',{
+        category: 'config',
+        defaults: {
+            name: { value: "Ecoflow", required: false},
+            server: { value:"https://api-e.ecoflow.com", required:true,
+                validate: RED.validators.regex(/https:[/]{2}[a-z.-]+/)},
+        },
+        credentials: {
+            access_key: { type: "text", required: true },
+            secret_key: { type: "password", required: true }
+        },
+        label: function() {
+            return this.name||"Ecoflow API";
+        }
+    });
+</script>
+
+<script type="text/html" data-template-name="ecoflow-api-server">
+    <div class="form-row">
+        <label for="node-config-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-config-input-name" placeholder="Ecoflow API">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-server"><i class="fa fa-tag"></i> Server</label>
+        <input type="text" id="node-config-input-server" placeholder="Ecoflow API Endpoint">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-access_key"><i class="fa fa-tag"></i> Access Key</label>
+        <input type="text" id="node-config-input-access_key" placeholder="Access Key">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-secret_key"><i class="fa fa-tag"></i> Secret Key</label>
+        <input type="password" id="node-config-input-secret_key" placeholder="Secret Key">
+    </div>
+</script>

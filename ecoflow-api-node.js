@@ -1,20 +1,14 @@
-module.exports = function(RED) {
-    
-    const ecoflowAPI = require("./ecoflow-api");
-
-    
+module.exports = function(RED) {    
 
     function queryEcoflowApi(config) {
         RED.nodes.createNode(this,config);
 
         var node = this;
 
-        var ak = node.credentials.access_key;
-        var sk = node.credentials.secret_key;
         var fn = config.function;
         var sn = config.serial_number;
 
-        ecoflowAPI.init(ak,sk);
+        var server = RED.nodes.getNode(config.remote);
 
         node.on('input', function(msg) {
 
@@ -28,18 +22,14 @@ module.exports = function(RED) {
 
             switch(func) {
                 case 'queryQuotaAll':
-                    ecoflowAPI.queryQuotaAll(serialNumber, outFunc);
+                    server.queryQuotaAll(serialNumber, outFunc);
                     break;
                 case 'deviceList':
-                    ecoflowAPI.queryDeviceList(outFunc);
+                    server.queryDeviceList(outFunc);
                     break;
             }
         });
     }
 
-    RED.nodes.registerType("ecoflow-api", queryEcoflowApi, {
-        credentials: {
-            access_key: { type: "text" },
-            secret_key: { type: "password" }
-        }});
+    RED.nodes.registerType("ecoflow-api", queryEcoflowApi);
 }

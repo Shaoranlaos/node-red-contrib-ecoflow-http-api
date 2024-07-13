@@ -4,12 +4,9 @@
         color: '#a6bbcf',
         defaults: {
             name: { value: "Ecoflow API", required: false },
+            remote: { value:"", type:"ecoflow-api-server", required: true },
             serial_number: { required: false },
             function: { value: "queryQuotaAll", required: false }
-        },
-        credentials: {
-            access_key: { type: "text", required: true },
-            secret_key: { type: "password", required: true }
         },
         inputs: 1,
         outputs: 1,
@@ -37,12 +34,8 @@
         <input type="text" id="node-input-name" placeholder="Name">
     </div>
     <div class="form-row">
-        <label for="node-input-access_key"><i class="fa fa-tag"></i> Access Key</label>
-        <input type="text" id="node-input-access_key" placeholder="Access Key">
-    </div>
-    <div class="form-row">
-        <label for="node-input-secret_key"><i class="fa fa-tag"></i> Secret Key</label>
-        <input type="password" id="node-input-secret_key" placeholder="Secret Key">
+        <label for="node-input-remote"><i class="fa fa-tag"></i> Remote Server</label>
+        <input type="text" id="node-input-remote" placeholder="Remote API">
     </div>
     <div class="form-row">
         <label for="node-input-function"><i class="fa fa-tag"></i> Function</label>
