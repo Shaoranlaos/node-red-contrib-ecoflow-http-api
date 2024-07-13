@@ -18,7 +18,7 @@ module.exports = function(RED) {
             httpAgent: new http.Agent({ keepAlive: true }),
         });
 
-        async function EcoflowRequest(path, params, errFunc) {
+        async function EcoflowRequest(path, params) {
             if (params) {
                 keys = Object.keys(params);
                 sortedParams = new Map();
@@ -47,22 +47,22 @@ module.exports = function(RED) {
 
                     node.debug(response.data);
                     if (response.status == 200 && response.data.data) {
-                        return response.data.data;
+                        return [response.data.data,undefined];
                     } else {
-                        errFunc(response.data)
+                        return [undefined,response.data]
                     }
                 })
                 .catch(function(error) {
                     node.error(error);
-                    errFunc(error);
+                    return [undefined,error];
                 });
         }
 
-        node.queryQuotaAll = function(sn, errFunc = function(_) {}) {
-            return EcoflowRequest("/iot-open/sign/device/quota/all", { sn: sn }, errFunc);
+        node.queryQuotaAll = function(sn) {
+            return EcoflowRequest("/iot-open/sign/device/quota/all", { sn: sn });
         }
-        node.queryDeviceList = function(errFunc = function(_) {}) {
-            return EcoflowRequest("/iot-open/sign/device/list", {}, errFunc);
+        node.queryDeviceList = function() {
+            return EcoflowRequest("/iot-open/sign/device/list", {});
         }
     }
 

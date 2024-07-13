@@ -16,24 +16,25 @@ module.exports = function(RED) {
             let serialNumber = sn ? sn : msg.sn ? msg.sn : msg.payload;
 
             outFunc = function(data) {
-                if (data) {
-                    msg.payload = data;
-                    send(msg);
-                }
+                
             }
 
-            hasErr = false;
-            errFunc = function(error) { hasErr=true; done(error);};
             switch(func) {
                 case 'queryQuotaAll':
-                    outFunc(await server.queryQuotaAll(serialNumber, errFunc));
+                    [data,error] = await server.queryQuotaAll(serialNumber);
                     break;
                 case 'deviceList':
-                    outFunc(await server.queryDeviceList(errFunc));
+                    [data,error] = await server.queryDeviceList();
                     break;
             }
-            if (!hasErr)
+
+            if (data) {
+                msg.payload = data;
+                send(msg);
                 done();
+            } else {
+                done(error);
+            }
         });
     }
 
