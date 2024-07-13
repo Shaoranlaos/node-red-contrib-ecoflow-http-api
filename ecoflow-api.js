@@ -1,20 +1,16 @@
-const axios = require('axios');
-const http  = require('http')
-
-
 module.exports = function(RED) {
 
-    var accessKey;
-    var secretKey;
-    var request;
-    var ecoflowApiServer
+    const axios = require('axios');
+    const http  = require('http');
 
     function RemoteServerNode(n) {
         RED.nodes.createNode(this,n);
 
-        ecoflowApiServer = n.server;
-        accessKey = this.credentials.access_key;
-        secretKey = this.credentials.secret_key;
+        let node = this;
+
+        let ecoflowApiServer = n.server;
+        let accessKey = node.credentials.access_key;
+        let secretKey = node.credentials.secret_key;
 
         request = axios.create({
             baseURL: ecoflowApiServer,
@@ -22,12 +18,51 @@ module.exports = function(RED) {
             httpAgent: new http.Agent({ keepAlive: true }),
         });
 
-        this.queryQuotaAll = function(sn, resFunc) {
-            EcoflowRequest("/iot-open/sign/device/quota/all", { sn: sn }, resFunc);
+        async function EcoflowRequest(path, params, errFunc) {
+            if (params) {
+                keys = Object.keys(params);
+                sortedParams = new Map();
+                keys.sort().forEach(k => sortedParams[k] = params[k]);
+            } else {
+                sortedParams = params;
+            }
+        
+            sortedParams.accessKey = accessKey;
+            sortedParams.nonce = generateNonce();
+            sortedParams.timestamp = generateTimestamp();
+        
+            queryParams = toQueryParamMapping(sortedParams);
+        
+            var header = {
+                accessKey: sortedParams.accessKey,
+                nonce: sortedParams.nonce,
+                timestamp: sortedParams.timestamp,
+                sign: hmac(secretKey, queryParams),
+            };
+            node.trace(ecoflowApiServer+path+'?'+queryParams);
+            
+            return await request.get(path, { headers:header, params: params })
+                .then(function (response) {
+                    node.debug(response.status);
+
+                    node.debug(response.data);
+                    if (response.status == 200 && response.data.data) {
+                        return response.data.data;
+                    } else {
+                        errFunc(response.data)
+                    }
+                })
+                .catch(function(error) {
+                    node.error(error);
+                    errFunc(error);
+                });
         }
-    
-        this.queryDeviceList = function(resFunc) {
-            EcoflowRequest("/iot-open/sign/device/list", {}, resFunc);
+
+        node.queryQuotaAll = function(sn, errFunc = function(_) {}) {
+            return EcoflowRequest("/iot-open/sign/device/quota/all", { sn: sn }, errFunc);
+        }
+        node.queryDeviceList = function(errFunc = function(_) {}) {
+            return EcoflowRequest("/iot-open/sign/device/list", {}, errFunc);
         }
     }
 
@@ -63,49 +98,11 @@ module.exports = function(RED) {
             }}).join('&');
     }
 
-    function hmac(message) {
+    function hmac(secretKey, message) {
         var crypto = require('crypto');
         var hmac = crypto.createHmac('sha256', secretKey);
         data = hmac.update(message);
         //Creating the hmac in the required format
         return data.digest('hex');
-    }
-
-
-    function EcoflowRequest(path, params, resFunc) {
-        if (params) {
-            keys = Object.keys(params);
-            sortedParams = new Map();
-            keys.sort().forEach(k => sortedParams[k] = params[k]);
-        } else {
-            sortedParams = params;
-        }
-    
-        sortedParams.accessKey = accessKey;
-        sortedParams.nonce = generateNonce();
-        sortedParams.timestamp = generateTimestamp();
-    
-        queryParams = toQueryParamMapping(sortedParams);
-    
-        var header = {
-            accessKey: sortedParams.accessKey,
-            nonce: sortedParams.nonce,
-            timestamp: sortedParams.timestamp,
-            sign: hmac(queryParams),
-        };
-        console.log(ecoflowApiServer+path+'?'+queryParams);
-        console.log(header);
-        
-        request.get(path, { headers:header, params: params })
-            .then(function (response) {
-                console.log(response.status);
-                console.log(response.data);
-                if (response.status == 200) {
-                    resFunc(response.data.data);
-                }
-            })
-            .catch(function(error) {
-                console.log(error);
-            });
     }
 }

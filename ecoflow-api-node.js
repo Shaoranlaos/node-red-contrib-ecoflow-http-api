@@ -3,31 +3,37 @@ module.exports = function(RED) {
     function queryEcoflowApi(config) {
         RED.nodes.createNode(this,config);
 
-        var node = this;
+        let node = this;
 
-        var fn = config.function;
-        var sn = config.serial_number;
+        let fn = config.function;
+        let sn = config.serial_number;
 
-        var server = RED.nodes.getNode(config.remote);
+        let server = RED.nodes.getNode(config.remote);
 
-        node.on('input', function(msg) {
+        node.on('input', async function(msg, send, done) {
 
-            var func = fn ? fn : msg.function;
-            var serialNumber = sn ? sn : msg.sn ? msg.sn : msg.payload;
+            let func = fn ? fn : msg.function;
+            let serialNumber = sn ? sn : msg.sn ? msg.sn : msg.payload;
 
             outFunc = function(data) {
-                msg.payload = data;
-                node.send(msg);
+                if (data) {
+                    msg.payload = data;
+                    send(msg);
+                }
             }
 
+            hasErr = false;
+            errFunc = function(error) { hasErr=true; done(error);};
             switch(func) {
                 case 'queryQuotaAll':
-                    server.queryQuotaAll(serialNumber, outFunc);
+                    outFunc(await server.queryQuotaAll(serialNumber, errFunc));
                     break;
                 case 'deviceList':
-                    server.queryDeviceList(outFunc);
+                    outFunc(await server.queryDeviceList(errFunc));
                     break;
             }
+            if (!hasErr)
+                done();
         });
     }
 
