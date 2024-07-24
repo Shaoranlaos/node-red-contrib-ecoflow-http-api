@@ -18,11 +18,11 @@ module.exports = function(RED) {
             httpAgent: new http.Agent({ keepAlive: true }),
         });
 
-        async function EcoflowRequest(path, params) {
-            if (params) {
-                keys = Object.keys(params);
-                sortedParams = new Map();
-                keys.sort().forEach(k => sortedParams[k] = params[k]);
+        async function EcoflowRequest(path, params, method = 'GET', body = {}) {
+            if (params||body) {
+                params = {...params, ...body};
+                sortedParams = getMapFromObject(params);
+                node.trace(JSON.stringify(sortedParams));
             } else {
                 sortedParams = params;
             }
@@ -40,8 +40,19 @@ module.exports = function(RED) {
                 sign: hmac(secretKey, queryParams),
             };
             node.trace(ecoflowApiServer+path+'?'+queryParams);
-            
-            return await request.get(path, { headers:header, params: params })
+
+            switch (method) {
+                case 'GET':
+                    taskReq = request.get(path, { headers:header, params: params });
+                    break;
+                case 'POST':
+                    taskReq = request.post(path, body, { headers:header, params: params });
+                    break;
+                case 'PUT':
+                    taskReq = request.put(path, body, { headers:header, params: params });
+                    break;
+            }
+            return await taskReq
                 .then(function (response) {
                     node.debug(response.status);
 
@@ -64,6 +75,9 @@ module.exports = function(RED) {
         node.queryDeviceList = function() {
             return EcoflowRequest("/iot-open/sign/device/list", {});
         }
+        node.queryQuotaSelective = function(sn, types) {
+            return EcoflowRequest("/iot-open/sign/device/quota", {}, 'POST', {sn: sn, params: {cmdSet: 32, id: 66, quotas: types}});
+        }
     }
 
     RED.nodes.registerType("ecoflow-api-server", RemoteServerNode, {
@@ -78,24 +92,82 @@ module.exports = function(RED) {
     const getType = obj => Object.prototype.toString.call(obj).slice(8, -1);
 
     function toQueryParamMapping(params) {
-        return Object.keys(params).map(key => {
-            v=params[key];
-            switch(getType(v)) {
-                case 'Array':
-                    return Object.keys(v)
-                        .map(k => {
-                            var start = key+"["+k+"]";
-                            if (getType(v[k]) =='Object') {
-                                return Object.keys(v[k]).map(k2 => start+"."+k2+"="+v[k][k2]).join('&');
-                            } else {
-                                return start+"="+v[k];
-                            }
-                        }).join('&');
-                    case 'Object':
-                        return Object.keys(v).map(k => key+"."+k+"="+v[k]).join('&');
-                default:
-                    return key+"="+v;
-            }}).join('&');
+        return Object.keys(params).map(key => key+"="+params[key]).join('&');
+    }
+
+    function getMapFromObject(jsonObject) {
+        const getMapFromObjectMap = new Map();
+        for (key in jsonObject) {
+            //console.log('getMapFromObject: objectKey='+key);
+            let getMapFromObjectMapValue = jsonObject[key];
+            let getMapFromObjectMapResMap = getByObject(key, getMapFromObjectMapValue);
+            for (let x of Object.entries(getMapFromObjectMapResMap)) {
+                getMapFromObjectMap[x[0]] = x[1];
+            }
+        }
+        return mapSort(getMapFromObjectMap);
+    }
+
+    function getByObject(key, value) {
+        //console.log('getByObject: check '+JSON.stringify(value));
+        if(value) {
+            if (getType(value) == 'Array') {
+                return getByJsonArray(key, value);
+            } else if (getType(value) == 'Object') {
+                return getByJsonObject(key, value);
+            } else {
+                const getByObjectMap = new Map();
+                getByObjectMap[key] = value;
+                return getByObjectMap;
+            }
+        } else {
+            return new Map();
+        }
+    }
+
+    function getByJsonArray(key, value) {
+        //console.log('getByJsonArray: '+key+'='+JSON.stringify(value));
+        if(value) {
+            const getByJsonArrayMap = new Map();
+            for (i = 0; i < value.length; i++) {
+                for (const x of Object.entries(getByObject(getArrayKey(key, i), value[i]))) {
+                    getByJsonArrayMap[x[0]] = x[1];
+                }
+            }
+            return mapSort(getByJsonArrayMap);
+        } else {
+            return new Map();
+        }
+    }
+
+    function getByJsonObject(key, value) {
+        //console.log('getByJsonObject: '+key+'='+JSON.stringify(value));
+        if (value){
+            const getByJsonObjectMap = new Map();
+            for (innerKey in value) {
+                for (const x of Object.entries(getByObject(getObjectKey(key, innerKey), value[innerKey]))) {
+                    getByJsonObjectMap[x[0]] = x[1];
+                }
+            }
+            return mapSort(getByJsonObjectMap);
+        } else {
+            return new Map();
+        }
+    }
+
+    function getObjectKey(key, innerKey) {
+        return key + "." + innerKey;
+    }
+
+    function getArrayKey(key, index) {
+        return key+"["+index+"]";
+    }
+
+    function mapSort(map) {
+        const mapSortKeys = Object.keys(map);
+        const sortedMap = new Map();
+        mapSortKeys.sort().forEach(k => sortedMap[k] = map[k]);
+        return sortedMap;
     }
 
     function hmac(secretKey, message) {
