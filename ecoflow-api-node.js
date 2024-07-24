@@ -14,17 +14,23 @@ module.exports = function(RED) {
 
             let func = fn ? fn : msg.function;
             let serialNumber = sn ? sn : msg.sn ? msg.sn : msg.payload;
+            let quotaTypes = msg.payload;
 
-            outFunc = function(data) {
-                
-            }
-
+            let data, error;
             switch(func) {
                 case 'queryQuotaAll':
                     [data,error] = await server.queryQuotaAll(serialNumber);
                     break;
                 case 'deviceList':
                     [data,error] = await server.queryDeviceList();
+                    break;
+                case 'queryQuotaSelective':
+                    node.debug(quotaTypes);
+                    if (getType(quotaTypes) != 'Array') {
+                        error = "msg.payload is not an array!";
+                    } else {
+                        [data,error] = await server.queryQuotaSelective(serialNumber,quotaTypes);
+                    }
                     break;
             }
 
@@ -33,10 +39,13 @@ module.exports = function(RED) {
                 send(msg);
                 done();
             } else {
+                //send(msg);
                 done(error);
             }
         });
     }
 
     RED.nodes.registerType("ecoflow-api", queryEcoflowApi);
+
+    const getType = obj => Object.prototype.toString.call(obj).slice(8, -1);
 }
