@@ -1,0 +1,72 @@
+[
+    {
+        "id": "f6f2187d.f17ca8",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "f9866b89a1c803ed",
+        "type": "ecoflow-api",
+        "z": "f6f2187d.f17ca8",
+        "name": "Ecoflow API",
+        "remote": "93089d7a5cb45ad7",
+        "serial_number": "",
+        "function": "deviceList",
+        "x": 310,
+        "y": 80,
+        "wires": [
+            [
+                "9d6f617812128d4d"
+            ]
+        ]
+    },
+    {
+        "id": "dba0d3dc392e0e21",
+        "type": "inject",
+        "z": "f6f2187d.f17ca8",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "5",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "5",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 130,
+        "y": 80,
+        "wires": [
+            [
+                "f9866b89a1c803ed"
+            ]
+        ]
+    },
+    {
+        "id": "9d6f617812128d4d",
+        "type": "debug",
+        "z": "f6f2187d.f17ca8",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 480,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "93089d7a5cb45ad7",
+        "type": "ecoflow-api-server",
+        "name": "Ecoflow",
+        "server": "https://api-e.ecoflow.com"
+    }
+]
