@@ -1,0 +1,227 @@
+[
+    {
+        "id": "7a9876258510e1c5",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "27c04d122189f24d",
+        "type": "ecoflow-api",
+        "z": "7a9876258510e1c5",
+        "name": "Ecoflow API",
+        "remote": "93089d7a5cb45ad7",
+        "serial_number": "",
+        "function": "deviceList",
+        "x": 290,
+        "y": 80,
+        "wires": [
+            [
+                "5381cc1aefc6ef68"
+            ]
+        ]
+    },
+    {
+        "id": "3f8dad03553fa3e7",
+        "type": "inject",
+        "z": "7a9876258510e1c5",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 120,
+        "y": 80,
+        "wires": [
+            [
+                "27c04d122189f24d"
+            ]
+        ]
+    },
+    {
+        "id": "5381cc1aefc6ef68",
+        "type": "split",
+        "z": "7a9876258510e1c5",
+        "name": "",
+        "splt": "\\n",
+        "spltType": "str",
+        "arraySplt": 1,
+        "arraySpltType": "len",
+        "stream": false,
+        "addname": "",
+        "property": "payload",
+        "x": 450,
+        "y": 80,
+        "wires": [
+            [
+                "57b0b007ddd03db5",
+                "5f375c4bbc7d9f75"
+            ]
+        ]
+    },
+    {
+        "id": "0980b927f5361fdb",
+        "type": "ecoflow-api",
+        "z": "7a9876258510e1c5",
+        "name": "Ecoflow API",
+        "remote": "93089d7a5cb45ad7",
+        "serial_number": "",
+        "function": "queryQuotaAll",
+        "x": 790,
+        "y": 80,
+        "wires": [
+            [
+                "87ee47f0ddac4d09"
+            ]
+        ]
+    },
+    {
+        "id": "87ee47f0ddac4d09",
+        "type": "debug",
+        "z": "7a9876258510e1c5",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 960,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "57b0b007ddd03db5",
+        "type": "change",
+        "z": "7a9876258510e1c5",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "sn",
+                "pt": "msg",
+                "to": "payload.sn",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 610,
+        "y": 80,
+        "wires": [
+            [
+                "0980b927f5361fdb"
+            ]
+        ]
+    },
+    {
+        "id": "3b9dab59f40d8b75",
+        "type": "change",
+        "z": "7a9876258510e1c5",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "sn",
+                "pt": "msg",
+                "to": "payload.sn",
+                "tot": "msg"
+            },
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "[\"20_1.invOutputWatts\",\"bmsMaster.f32ShowSoc\",\"2_1.watts\"]",
+                "tot": "json"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 610,
+        "y": 140,
+        "wires": [
+            [
+                "4b2a13f3a99dac77"
+            ]
+        ]
+    },
+    {
+        "id": "4b2a13f3a99dac77",
+        "type": "ecoflow-api",
+        "z": "7a9876258510e1c5",
+        "name": "Ecoflow API",
+        "remote": "93089d7a5cb45ad7",
+        "serial_number": "",
+        "function": "queryQuotaSelective",
+        "x": 790,
+        "y": 140,
+        "wires": [
+            [
+                "781d4c5a2f982e7f"
+            ]
+        ]
+    },
+    {
+        "id": "781d4c5a2f982e7f",
+        "type": "debug",
+        "z": "7a9876258510e1c5",
+        "name": "debug 2",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 960,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "5f375c4bbc7d9f75",
+        "type": "switch",
+        "z": "7a9876258510e1c5",
+        "name": "",
+        "property": "payload.online",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "1",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 450,
+        "y": 140,
+        "wires": [
+            [
+                "3b9dab59f40d8b75"
+            ]
+        ]
+    },
+    {
+        "id": "93089d7a5cb45ad7",
+        "type": "ecoflow-api-server",
+        "name": "Ecoflow",
+        "server": "https://api-e.ecoflow.com"
+    }
+]
