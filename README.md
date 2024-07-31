@@ -39,7 +39,7 @@ It takes no inputs.
 ]
 ```
 
-### query QuotaAll of a device
+### query all data of a device
 
 The returns all data that can be queried for a specific device. It needs the serial number of the device as input.
 

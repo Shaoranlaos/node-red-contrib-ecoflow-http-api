@@ -8,6 +8,10 @@ module.exports = function(RED) {
         let fn = config.function;
         let sn = config.serial_number;
 
+        if (fn == "msg") {
+            fn = null;
+        }
+
         let server = RED.nodes.getNode(config.remote);
 
         node.on('input', async function(msg, send, done) {
