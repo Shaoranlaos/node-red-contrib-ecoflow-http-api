@@ -2,9 +2,9 @@
     RED.nodes.registerType('ecoflow-api-server',{
         category: 'config',
         defaults: {
-            name: { value: "Ecoflow", required: false},
+            name: { value: "Ecoflow", required: false },
             server: { value:"https://api-e.ecoflow.com", required:true,
-                validate: RED.validators.regex(/https:[/]{2}[a-z.-]+/)},
+                validate: RED.validators.regex(/https:[/]{2}[a-z.-]+/) },
         },
         credentials: {
             access_key: { type: "text", required: true },
