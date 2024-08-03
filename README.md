@@ -70,6 +70,21 @@ The datapoints must be inputed via an array in the payload of the incoming messa
 
 Example datapoints definition: `["20_1.invOutputWatts","20_1.invDemandWatts"]`
 
+### set a specific datapoint
+
+This is a complicated endpoint because the needed JSON for the request various by a lot from device type to device type.
+Because of that the endpoint is very generic and almost expects the full json from the official API. Only the serial number must be excluded because this will be set from the serial number set in the node config or from the msg.sn field.
+
+Example:
+If the SetCommand for a PowerStream Custom Output expects the following JSON according to the <a href="https://developer-eu.ecoflow.com/us/document/powerStreamMicroInverter">documentation</a>
+```
+{"sn": "HW513000SF767194","cmdCode": "WN511_SET_PERMANENT_WATTS_PACK","params": {"permanentWatts": 20}}
+```
+the endpoint expects the following as a json payload on the message
+```
+{"cmdCode": "WN511_SET_PERMANENT_WATTS_PACK","params": {"permanentWatts": 20}}
+```
+
 ## Getting Access Key and Secret Key
 
 The Credentials can be requested on the offical Ecoflow IoT Website: [Ecoflow OpenIoT](https://developer-eu.ecoflow.com).

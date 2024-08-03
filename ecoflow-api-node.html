@@ -21,6 +21,7 @@
                             { value: "deviceList", label: "query the device list" },
                             { value: "queryQuotaAll", label: "query all data of a device" },
                             { value: "queryQuotaSelective", label: "query specific datapoints" },
+                            { value: "setQuota", label: "set a specific value" },
                             { value: "msg", label: "use the msg.function field" }
                         ]
                     }
@@ -58,20 +59,35 @@
         <dt>sn
             <span class="property-type">string</span>
         </dt>
-        <dd>The serial number of the device to query.</dd>
+        <dd>The serial number of the device to execute a function for (not used by deviceList).</dd>
         <dt>payload
-            <span class="property-type">string</span></dt>
-        <dd>Alternative for the sn field.</dd>
+            <span class="property-type">string/json</span></dt>
+        <dd>Contains the data to be used in the function.<br/>
+            This is different based on the function used:
+            <dl>
+                <dt>queryQuotaAll</dt>
+                <dd>Contains the serial number of the device to query (as string). Is used if msg.sn is not set.</dd>
+                <dt>queryQuotaSelective</dt>
+                <dd>Contains the array of datapoints to query for, e.g. ["20_1.invOutputWatts"]</dd>
+                <dt>setQuota</dt>
+                <dd>Contains a json with all parameters beside the serial number needed for the SetCommand.<br/>
+                    A better option is not posible because the needed json differs from device to device.<br/>
+                    E.g.:
+                </dd>
+            </dl>
+        </dd>
         <dt>function
             <span class="property-type">string</span>
         </dt>
-        <dd>The function to execute.<br/>
+        <dd>The function to execute (for niche applications only, the function should be set on the node for better visibility).<br/>
             Can be one of
             <ul>
                 <li>queryQuotaAll</li>
                 <li>deviceList</li>
                 <li>queryQuotaSelective</li>
-            </ul></dd>
+                <li>setQuota</li>
+            </ul>
+        </dd>
     </dl>
 
     <h3>Outputs</h3>

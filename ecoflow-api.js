@@ -20,8 +20,8 @@ module.exports = function(RED) {
 
         async function EcoflowRequest(path, params, method = 'GET', body = {}) {
             if (params||body) {
-                params = {...params, ...body};
-                sortedParams = getMapFromObject(params);
+                let paramsBodyMerge = {...params, ...body};
+                sortedParams = getMapFromObject(paramsBodyMerge);
                 node.trace(JSON.stringify(sortedParams));
             } else {
                 sortedParams = params;
@@ -43,22 +43,23 @@ module.exports = function(RED) {
 
             switch (method) {
                 case 'GET':
-                    taskReq = request.get(path, { headers:header, params: params });
+                    taskReq = request.get(path, { headers: header, params: params });
                     break;
                 case 'POST':
-                    taskReq = request.post(path, body, { headers:header, params: params });
+                    taskReq = request.post(path, body, { headers: header, params: params });
                     break;
                 case 'PUT':
-                    taskReq = request.put(path, body, { headers:header, params: params });
+                    taskReq = request.put(path, body, { headers: header, params: params });
                     break;
             }
             return await taskReq
                 .then(function (response) {
                     node.debug(response.status);
-
+                    node.debug(response.headers);
                     node.debug(response.data);
-                    if (response.status == 200 && response.data.data) {
-                        return [response.data.data,undefined];
+                    //console.log(response);
+                    if (response.status == 200 && (response.data.data || response.data.message == 'Success')) {
+                        return [response.data.data || { message: response.data.message }, undefined];
                     } else {
                         return [undefined,response.data]
                     }
@@ -77,6 +78,9 @@ module.exports = function(RED) {
         }
         node.queryQuotaSelective = function(sn, types) {
             return EcoflowRequest("/iot-open/sign/device/quota", {}, 'POST', {sn: sn, params: {cmdSet: 32, id: 66, quotas: types}});
+        }
+        node.setQuotaSelective = function(sn, values) {
+            return EcoflowRequest("/iot-open/sign/device/quota", {}, 'PUT', {sn: sn, ...values });
         }
     }
 
@@ -110,7 +114,7 @@ module.exports = function(RED) {
 
     function getByObject(key, value) {
         //console.log('getByObject: check '+JSON.stringify(value));
-        if(value) {
+        if(value != undefined) {
             if (getType(value) == 'Array') {
                 return getByJsonArray(key, value);
             } else if (getType(value) == 'Object') {
@@ -127,7 +131,7 @@ module.exports = function(RED) {
 
     function getByJsonArray(key, value) {
         //console.log('getByJsonArray: '+key+'='+JSON.stringify(value));
-        if(value) {
+        if(value != undefined) {
             const getByJsonArrayMap = new Map();
             for (i = 0; i < value.length; i++) {
                 for (const x of Object.entries(getByObject(getArrayKey(key, i), value[i]))) {
@@ -142,7 +146,7 @@ module.exports = function(RED) {
 
     function getByJsonObject(key, value) {
         //console.log('getByJsonObject: '+key+'='+JSON.stringify(value));
-        if (value){
+        if (value != undefined){
             const getByJsonObjectMap = new Map();
             for (innerKey in value) {
                 for (const x of Object.entries(getByObject(getObjectKey(key, innerKey), value[innerKey]))) {

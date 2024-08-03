@@ -36,6 +36,14 @@ module.exports = function(RED) {
                         [data,error] = await server.queryQuotaSelective(serialNumber,quotaTypes);
                     }
                     break;
+                case 'setQuota':
+                    node.debug(quotaTypes);
+                    if (getType(quotaTypes) != 'Object') {
+                        error = "msg.payload is not an object!";
+                    } else {
+                        [data,error] = await server.setQuotaSelective(serialNumber,quotaTypes);
+                    }
+                    break;
             }
 
             if (data) {
