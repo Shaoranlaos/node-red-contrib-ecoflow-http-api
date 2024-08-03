@@ -1,0 +1,108 @@
+[
+    {
+        "id": "86c8f7721d8dd479",
+        "type": "tab",
+        "label": "Set Ecoflow Smart Plug Output",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "0874461ca53d0f59",
+        "type": "inject",
+        "z": "86c8f7721d8dd479",
+        "name": "disable smart Plug Output",
+        "props": [
+            {
+                "p": "sn",
+                "v": "HW5XXXXXXXXXXXXX",
+                "vt": "str"
+            },
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "{\"cmdCode\": \"WN511_SOCKET_SET_PLUG_SWITCH_MESSAGE\",\"params\": {\"plugSwitch\": 0}}",
+        "payloadType": "json",
+        "x": 180,
+        "y": 80,
+        "wires": [
+            [
+                "b31001602183fcd4"
+            ]
+        ]
+    },
+    {
+        "id": "164614d29be9efbf",
+        "type": "debug",
+        "z": "86c8f7721d8dd479",
+        "name": "debug 5",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 600,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "b31001602183fcd4",
+        "type": "ecoflow-api",
+        "z": "86c8f7721d8dd479",
+        "name": "Ecoflow API",
+        "remote": "93089d7a5cb45ad7",
+        "serial_number": "",
+        "function": "setQuota",
+        "x": 430,
+        "y": 80,
+        "wires": [
+            [
+                "164614d29be9efbf"
+            ]
+        ]
+    },
+    {
+        "id": "1976bf22cdc98487",
+        "type": "inject",
+        "z": "86c8f7721d8dd479",
+        "name": "enable smart Plug Output",
+        "props": [
+            {
+                "p": "sn",
+                "v": "HW5XXXXXXXXXXXXX",
+                "vt": "str"
+            },
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "{\"cmdCode\": \"WN511_SOCKET_SET_PLUG_SWITCH_MESSAGE\",\"params\": {\"plugSwitch\": 1}}",
+        "payloadType": "json",
+        "x": 180,
+        "y": 140,
+        "wires": [
+            [
+                "b31001602183fcd4"
+            ]
+        ]
+    },
+    {
+        "id": "93089d7a5cb45ad7",
+        "type": "ecoflow-api-server",
+        "name": "Ecoflow",
+        "server": "https://api-e.ecoflow.com"
+    }
+]
