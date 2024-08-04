@@ -27,6 +27,18 @@
                     }
                 ]
             })
+
+            // polling or callback
+            let updateFunction = function() {
+                let fn = $("#node-input-function").val();
+                if (fn == "deviceList") {
+                    $("#serialnumber").hide();
+                } else {
+                    $("#serialnumber").show();
+                }
+            };
+            updateFunction();
+            $("#node-input-function").change(updateFunction);
         }
     });
 </script>
@@ -44,7 +56,7 @@
         <label for="node-input-function"><i class="fa fa-tag"></i> Function</label>
         <input type="" id="node-input-function">
     </div>
-    <div class="form-row">
+    <div class="form-row" id="serialnumber">
         <label for="node-input-serial_number"><i class="fa fa-tag"></i> Serial Number</label>
         <input type="text" id="node-input-serial_number" placeholder="Serial Number">
     </div>
