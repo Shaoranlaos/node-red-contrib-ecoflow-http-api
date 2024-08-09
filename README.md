@@ -3,9 +3,11 @@
 A Node Red module that allows to use the offical Ecoflow HTTP API to read data from various supported Ecoflow devices.
 
 At the moment the following functions are supported:
-- List devices
-- Query all data of a device
-- Query specifc datapoints of a device
+- [List devices](#query-the-device-list)
+- [Query all data of a device](#query-all-data-of-a-device)
+- [Query specifc datapoints of a device](#query-specific-datapoints)
+- [Generic set of data of a device](#set-a-specific-datapoint)
+- [Query for the user specific MQTT parameters](#query-mqtt-configuration-parameter)
 
 ## Supported device types
 
