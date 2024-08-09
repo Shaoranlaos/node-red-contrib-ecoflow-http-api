@@ -22,6 +22,7 @@
                             { value: "queryQuotaAll", label: "query all data of a device" },
                             { value: "queryQuotaSelective", label: "query specific datapoints" },
                             { value: "setQuota", label: "set a specific value" },
+                            { value: "queryMqttCert", label: "get MQTT connection parameter" },
                             { value: "msg", label: "use the msg.function field" }
                         ]
                     }
@@ -31,7 +32,7 @@
             // polling or callback
             let updateFunction = function() {
                 let fn = $("#node-input-function").val();
-                if (fn == "deviceList") {
+                if (fn == "deviceList" || fn == 'queryMqttCert') {
                     $("#serialnumber").hide();
                 } else {
                     $("#serialnumber").show();
@@ -98,6 +99,7 @@
                 <li>deviceList</li>
                 <li>queryQuotaSelective</li>
                 <li>setQuota</li>
+                <li>queryMqttCert</li>
             </ul>
         </dd>
     </dl>

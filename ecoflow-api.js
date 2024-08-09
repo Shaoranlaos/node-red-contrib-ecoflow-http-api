@@ -66,6 +66,7 @@ module.exports = function(RED) {
                 })
                 .catch(function(error) {
                     node.error(error);
+                    console.log(error);
                     return [undefined,error];
                 });
         }
@@ -81,6 +82,9 @@ module.exports = function(RED) {
         }
         node.setQuotaSelective = function(sn, values) {
             return EcoflowRequest("/iot-open/sign/device/quota", {}, 'PUT', {sn: sn, ...values });
+        }
+        node.queryMqttCert =  function(sn) {
+            return EcoflowRequest("/iot-open/sign/certification", {});
         }
     }
 

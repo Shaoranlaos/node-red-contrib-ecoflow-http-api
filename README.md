@@ -85,6 +85,15 @@ the endpoint expects the following as a json payload on the message
 {"cmdCode": "WN511_SET_PERMANENT_WATTS_PACK","params": {"permanentWatts": 20}}
 ```
 
+### query MQTT configuration parameter
+
+This will query the HTTP-API for the needed configuration to use the offical MQTT-API.
+
+Example:
+```
+{"certificateAccount":"open-...","certificatePassword":"...","url":"mqtt-e.ecoflow.com","port":"8883","protocol":"mqtts"}
+```
+
 ## Getting Access Key and Secret Key
 
 The Credentials can be requested on the offical Ecoflow IoT Website: [Ecoflow OpenIoT](https://developer-eu.ecoflow.com).

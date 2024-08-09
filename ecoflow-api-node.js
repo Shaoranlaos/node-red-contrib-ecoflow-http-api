@@ -44,6 +44,9 @@ module.exports = function(RED) {
                         [data,error] = await server.setQuotaSelective(serialNumber,quotaTypes);
                     }
                     break;
+                case 'queryMqttCert':
+                    [data,error] = await server.queryMqttCert();
+                    break;
             }
 
             if (data) {
