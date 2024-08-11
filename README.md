@@ -106,4 +106,4 @@ It can take up to a week for the account to be enabled.
 
 1. The API returns the last known values for a device that is offline. Please use the device list function and check the online status of a device bevor using the values (see the example flow "ListDevicesAndQuerThem"). 
 2. The online status in the device list can take up to 15 minutes (in my observations) to reflect when a device is offline.
-3. The PowerOcean seems to have a bug where it only reports values in the API if one of the offical Apps for it are open. See [#9](https://github.com/Shaoranlaos/node-red-contrib-ecoflow-http-api/issues/9) for the cuurent status on this.
+3. The PowerOcean seems to have a bug where it only reports values in the API if one of the offical Apps for it are open. See [#9](https://github.com/Shaoranlaos/node-red-contrib-ecoflow-http-api/issues/9) for the curent status on this.
