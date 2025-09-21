@@ -81,16 +81,16 @@ module.exports = function(RED) {
         }
 
         node.queryQuotaAll = function(sn) {
-            return EcoflowRequest("/iot-open/sign/device/quota/all", { sn: sn });
+            return client.getDevicePropertiesPlain(sn);
         }
         node.queryDeviceList = function() {
-            return EcoflowRequest("/iot-open/sign/device/list", {});
+            return client.getDevicesPlain();
         }
         node.queryQuotaSelective = function(sn, types) {
             return EcoflowRequest("/iot-open/sign/device/quota", {}, 'POST', {sn: sn, params: {cmdSet: 32, id: 66, quotas: types}});
         }
         node.setQuotaSelective = function(sn, values) {
-            return EcoflowRequest("/iot-open/sign/device/quota", {}, 'PUT', {sn: sn, ...values });
+            return client.setCommandPlain({sn: sn, ...values });
         }
         node.queryMqttCert =  function(sn) {
             return client.getMqttCredentials();;
