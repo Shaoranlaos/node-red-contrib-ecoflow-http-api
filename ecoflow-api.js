@@ -1,8 +1,11 @@
+import { RestClient } from "@ecoflow-api/rest-client";
+
 module.exports = function(RED) {
 
     const axios = require('axios');
     const http  = require('http');
 
+    
     function RemoteServerNode(n) {
         RED.nodes.createNode(this,n);
 
@@ -11,6 +14,12 @@ module.exports = function(RED) {
         let ecoflowApiServer = n.server;
         let accessKey = node.credentials.access_key;
         let secretKey = node.credentials.secret_key;
+
+        const client = new RestClient({
+            accessKey: accessKey,
+            secretKey: secretKey,
+            host: ecoflowApiServer,
+        });
 
         request = axios.create({
             baseURL: ecoflowApiServer,
@@ -84,7 +93,7 @@ module.exports = function(RED) {
             return EcoflowRequest("/iot-open/sign/device/quota", {}, 'PUT', {sn: sn, ...values });
         }
         node.queryMqttCert =  function(sn) {
-            return EcoflowRequest("/iot-open/sign/certification", {});
+            return client.getMqttCredentials();;
         }
     }
 
