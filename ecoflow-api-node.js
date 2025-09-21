@@ -20,41 +20,38 @@ module.exports = function(RED) {
             let serialNumber = sn ? sn : msg.sn ? msg.sn : msg.payload;
             let quotaTypes = msg.payload;
 
-            let data, error;
-            switch(func) {
-                case 'queryQuotaAll':
-                    [data,error] = await server.queryQuotaAll(serialNumber);
-                    break;
-                case 'deviceList':
-                    [data,error] = await server.queryDeviceList();
-                    break;
-                case 'queryQuotaSelective':
-                    node.debug(quotaTypes);
-                    if (getType(quotaTypes) != 'Array') {
-                        error = "msg.payload is not an array!";
-                    } else {
-                        [data,error] = await server.queryQuotaSelective(serialNumber,quotaTypes);
-                    }
-                    break;
-                case 'setQuota':
-                    node.debug(quotaTypes);
-                    if (getType(quotaTypes) != 'Object') {
-                        error = "msg.payload is not an object!";
-                    } else {
-                        [data,error] = await server.setQuotaSelective(serialNumber,quotaTypes);
-                    }
-                    break;
-                case 'queryMqttCert':
-                    [data,error] = await server.queryMqttCert();
-                    break;
-            }
 
-            if (data) {
-                msg.payload = data;
-                send(msg);
-                done();
-            } else {
-                //send(msg);
+            let data;
+            try {
+                switch(func) {
+                    case 'queryQuotaAll':
+                        data = await server.queryQuotaAll(serialNumber);
+                        data = data.data;
+                        break;
+                    case 'deviceList':
+                        data = await server.queryDeviceList();
+                        data = data.data;
+                        break;
+                    case 'setQuota':
+                        node.debug(quotaTypes);
+                        if (getType(quotaTypes) != 'Object') {
+                            throw new Error("msg.payload is not an object!");
+                        } else {
+                            data = await server.setQuotaSelective(serialNumber,quotaTypes);
+                            data = data.data;
+                        }
+                        break;
+                    case 'queryMqttCert':
+                        data = await server.queryMqttCert();
+                        break;
+                }
+
+                if (data) {
+                    msg.payload = data;
+                    send(msg);
+                    done();
+                }
+            } catch (error) {
                 done(error);
             }
         });

@@ -1,5 +1,3 @@
-import { RestClient } from "@ecoflow-api/rest-client";
-
 module.exports = function(RED) {
     
     function RemoteServerNode(n) {
@@ -11,7 +9,9 @@ module.exports = function(RED) {
         let accessKey = node.credentials.access_key;
         let secretKey = node.credentials.secret_key;
 
-        const client = new RestClient({
+        const ecoflow = require("@ecoflow-api/rest-client");
+
+        const client = new ecoflow.RestClient({
             accessKey: accessKey,
             secretKey: secretKey,
             host: ecoflowApiServer,
@@ -27,7 +27,7 @@ module.exports = function(RED) {
             return client.setCommandPlain({sn: sn, ...values });
         }
         node.queryMqttCert =  function(sn) {
-            return client.getMqttCredentials();;
+            return client.getMqttCredentials();
         }
     }
 

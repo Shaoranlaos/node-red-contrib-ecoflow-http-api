@@ -20,7 +20,6 @@
                         options: [
                             { value: "deviceList", label: "query the device list" },
                             { value: "queryQuotaAll", label: "query all data of a device" },
-                            { value: "queryQuotaSelective", label: "query specific datapoints" },
                             { value: "setQuota", label: "set a specific value" },
                             { value: "queryMqttCert", label: "get MQTT connection parameter" },
                             { value: "msg", label: "use the msg.function field" }
@@ -80,8 +79,6 @@
             <dl>
                 <dt>queryQuotaAll</dt>
                 <dd>Contains the serial number of the device to query (as string). Is used if msg.sn is not set.</dd>
-                <dt>queryQuotaSelective</dt>
-                <dd>Contains the array of datapoints to query for, e.g. ["20_1.invOutputWatts"]</dd>
                 <dt>setQuota</dt>
                 <dd>Contains a json with all parameters beside the serial number needed for the SetCommand.<br/>
                     A better option is not posible because the needed json differs from device to device.<br/>
@@ -98,7 +95,6 @@
             <ul>
                 <li>queryQuotaAll</li>
                 <li>deviceList</li>
-                <li>queryQuotaSelective</li>
                 <li>setQuota</li>
                 <li>queryMqttCert</li>
             </ul>
