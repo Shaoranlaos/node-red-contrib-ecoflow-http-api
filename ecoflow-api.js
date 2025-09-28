@@ -29,6 +29,9 @@ module.exports = function(RED) {
         node.queryMqttCert =  function(sn) {
             return client.getMqttCredentials();
         }
+        node.getSpecificDevice = function(sn) {
+            return client.getDevice(sn);
+        }
     }
 
     RED.nodes.registerType("ecoflow-api-server", RemoteServerNode, {

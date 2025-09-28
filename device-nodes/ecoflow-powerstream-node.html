@@ -1,0 +1,84 @@
+<script type="text/javascript">
+    RED.nodes.registerType('ecoflow-powerstream',{
+        category: 'Ecoflow',
+        color: '#a6bbcf',
+        defaults: {
+            name: { value: "Powerstream", required: false },
+            remote: { value:"", type:"ecoflow-api-server", required: true },
+            serial_number: { required: true },
+            function: { value: "queryQuotaAll", required: false }
+        },
+        inputs: 1,
+        outputs: 1,
+        icon: "ecoflow-logo.svg",
+        label: () => this.name||'Powerstream',
+        oneditprepare: function() {
+            $("#node-input-function").typedInput({
+                types: [
+                    {
+                        value: "function",
+                        options: [
+                            { value: "queryAllData", label: "query all data of a device" },
+                            { value: "setPermanentOutput", label: "set a specific permanent output value" }
+                        ]
+                    }
+                ]
+            });
+        }
+    });
+</script>
+
+<script type="text/html" data-template-name="ecoflow-pwoerstream">
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-remote"><i class="fa fa-tag"></i> Remote Server</label>
+        <input type="text" id="node-input-remote" placeholder="Remote API">
+    </div>
+    <div class="form-row">
+        <label for="node-input-function"><i class="fa fa-tag"></i> Function</label>
+        <input type="" id="node-input-function">
+    </div>
+    <div class="form-row" id="serialnumber">
+        <label for="node-input-serial_number"><i class="fa fa-tag"></i> Serial Number</label>
+        <input type="text" id="node-input-serial_number" placeholder="Serial Number">
+    </div>
+</script>
+
+<script type="text/html" data-help-name="ecoflow-powerstream">
+    <p>This node uses the offical Ecoflow HTTP-API to make
+        request for ecoflow device data.<br>
+        This variant provides direct support for special commands of the Powerstream.</p>
+
+    <h3>Inputs</h3>
+    <dl class="message-properties">
+        <dt>payload
+            <span class="property-type">string/json</span></dt>
+        <dd>Contains the data to be used in the function.<br/>
+            This is different based on the function used:
+            <dl>
+                <dt>setQuota</dt>
+                <dd>Contains a json with all parameters beside the serial number needed for the SetCommand.<br/>
+                    A better option is not posible because the needed json differs from device to device.<br/>
+                    E.g.:
+                </dd>
+            </dl>
+        </dd>
+    </dl>
+
+    <h3>Outputs</h3>
+    <ol class="node-ports">
+        <dl class="message-properties">
+            <dt>payload
+                <span class="property-type">json</span></dt>
+            <dd>the output of the command, see the 
+                <a href="https://developer-eu.ecoflow.com/us/document/generalInfo">documentation</a>
+                for structure and content<br/>
+                <b>Attention</b>: please see the "Known Problems" section in the <a href="https://flows.nodered.org/node/@shaoranlaos/node-red-contrib-ecoflow-http-api">Readme</a>
+                of the node for some "quirks" in the returned values.
+            </dd>
+        </dl>
+    </ol>
+</script>
