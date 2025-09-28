@@ -17,27 +17,18 @@ module.exports = function(RED) {
             host: ecoflowApiServer,
         });
 
-        node.queryQuotaAll = function(sn) {
-            return client.getDevicePropertiesPlain(sn);
-        }
-        node.queryDeviceList = function() {
-            return client.requestHandler.get(client.deviceListUrl);
-        }
-        node.setQuotaSelective = function(sn, values) {
-            return client.setCommandPlain({sn: sn, ...values });
-        }
-        node.queryMqttCert =  function() {
-            return client.getMqttCredentials();
-        }
-        node.getSpecificDevice = function(sn) {
-            return client.getDevice(sn);
-        }
+        node.queryQuotaAll = (sn) => client.getDevicePropertiesPlain(sn);
+        node.queryDeviceList = () => client.requestHandler.get(client.deviceListUrl);
+        node.setQuotaSelective = (sn, values) => client.setCommandPlain({sn: sn, ...values });
+        node.queryMqttCert =  () => client.getMqttCredentials()
+        node.getSpecificDevice = (sn) => client.getDevice(sn);
     }
 
     RED.nodes.registerType("ecoflow-api-server", RemoteServerNode, {
         credentials: {
             access_key: { type: "text" },
             secret_key: { type: "password" }
-        }});
-
+            }
+        }
+    );
 }
