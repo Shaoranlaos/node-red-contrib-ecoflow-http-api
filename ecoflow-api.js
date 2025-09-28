@@ -26,7 +26,7 @@ module.exports = function(RED) {
         node.setQuotaSelective = function(sn, values) {
             return client.setCommandPlain({sn: sn, ...values });
         }
-        node.queryMqttCert =  function(sn) {
+        node.queryMqttCert =  function() {
             return client.getMqttCredentials();
         }
         node.getSpecificDevice = function(sn) {
