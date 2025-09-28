@@ -1,25 +1,27 @@
 <script type="text/javascript">
     RED.nodes.registerType('ecoflow-powerstream',{
         category: 'Ecoflow',
+        paletteLabel: 'PowerStream',
         color: '#a6bbcf',
         defaults: {
-            name: { value: "Powerstream", required: false },
+            name: { value: "", required: false },
             remote: { value:"", type:"ecoflow-api-server", required: true },
             serial_number: { required: true },
-            function: { value: "queryQuotaAll", required: false }
+            function: { value: "queryAllData", required: true }
         },
         inputs: 1,
         outputs: 1,
         icon: "ecoflow-logo.svg",
-        label: () => this.name||'Powerstream',
+        label: function() { return this.name || 'Powerstream'; },
         oneditprepare: function() {
             $("#node-input-function").typedInput({
                 types: [
                     {
                         value: "function",
                         options: [
-                            { value: "queryAllData", label: "query all data of a device" },
-                            { value: "setPermanentOutput", label: "set a specific permanent output value" }
+                            { value: "queryAllData", label: "Query all available data" },
+                            { value: "setPermanentOutput", label: "Set a specific permanent output value" },
+                            { value: "setSupplyPriority", label: "Set supply priority" }
                         ]
                     }
                 ]
@@ -28,7 +30,7 @@
     });
 </script>
 
-<script type="text/html" data-template-name="ecoflow-pwoerstream">
+<script type="text/html" data-template-name="ecoflow-powerstream">
     <div class="form-row">
         <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
         <input type="text" id="node-input-name" placeholder="Name">
@@ -37,13 +39,13 @@
         <label for="node-input-remote"><i class="fa fa-tag"></i> Remote Server</label>
         <input type="text" id="node-input-remote" placeholder="Remote API">
     </div>
-    <div class="form-row">
-        <label for="node-input-function"><i class="fa fa-tag"></i> Function</label>
-        <input type="" id="node-input-function">
-    </div>
     <div class="form-row" id="serialnumber">
         <label for="node-input-serial_number"><i class="fa fa-tag"></i> Serial Number</label>
         <input type="text" id="node-input-serial_number" placeholder="Serial Number">
+    </div>
+    <div class="form-row">
+        <label for="node-input-function"><i class="fa fa-tag"></i> Function</label>
+        <input type="" id="node-input-function">
     </div>
 </script>
 
@@ -59,10 +61,16 @@
         <dd>Contains the data to be used in the function.<br/>
             This is different based on the function used:
             <dl>
-                <dt>setQuota</dt>
-                <dd>Contains a json with all parameters beside the serial number needed for the SetCommand.<br/>
-                    A better option is not posible because the needed json differs from device to device.<br/>
-                    E.g.:
+                <dt>permanent Output value</dt>
+                <dd>Number of Watts t set the output to<br/>
+                    E.g.: 100 for 100W, 300 for 300W, 600 for 600W
+                </dd>
+                <dt>Supply Priority</dt>
+                <dd>String with one of the following values:<br/>
+                    <ul>
+                        <li>"powerSupply"</li>
+                        <li>"battery"</li>
+                    </ul>
                 </dd>
             </dl>
         </dd>
@@ -76,8 +84,17 @@
             <dd>the output of the command, see the 
                 <a href="https://developer-eu.ecoflow.com/us/document/generalInfo">documentation</a>
                 for structure and content<br/>
+                This is different based on the function used:
+                <dl>
+                    <dt>queryAllData</dt>
+                    <dd>Contains all available data of the Powerstream as json object</dd>
+                    <dt>setPermanentOutput</dt>
+                    <dd>a json with { success: true } if the command was successful</dd>
+                    <dt>setSupplyPriority</dt>
+                    <dd>Contains a json with { success: true } if the command was successful</dd>
+                </dl>
                 <b>Attention</b>: please see the "Known Problems" section in the <a href="https://flows.nodered.org/node/@shaoranlaos/node-red-contrib-ecoflow-http-api">Readme</a>
-                of the node for some "quirks" in the returned values.
+                of the plugin for some "quirks" in the returned values.
             </dd>
         </dl>
     </ol>

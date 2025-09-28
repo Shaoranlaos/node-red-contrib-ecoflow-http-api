@@ -20,8 +20,9 @@
   "node-red": {
     "version": ">=3.0.0",
     "nodes": {
-      "Ecoflow API": "ecoflow-api-node.js",
-      "Ecoflow API Server": "ecoflow-api.js"
+      "API": "ecoflow-api-node.js",
+      "Ecoflow API Server": "ecoflow-api.js",
+      "PowerStream": "device-nodes/ecoflow-powerstream-node.js"
     }
   },
   "engines": {
