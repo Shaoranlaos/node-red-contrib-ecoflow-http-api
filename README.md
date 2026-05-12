@@ -119,7 +119,7 @@ It can take up to a week for the account to be enabled.
 
 1. The API returns the last known values for a device that is offline. Please use the device list function and check the online status of a device bevor using the values (see the example flow "ListDevicesAndQueryThem"). 
 2. The online status in the device list can take up to 15 minutes (in my observations) to reflect when a device is offline.
-3. In the current version of the API data is only refreshed every 15 minutes when the ecoflow app is not open on any device with the same account. If the app is open the data seems to refresh every second like shown in the app but goes back to every 15 minutes almost immediatly (after a minute or so) after the app is closed.
+3. In the current version (May 2026) of the API data is only refreshed every 15 minutes when the ecoflow app is not open on any device with the same account. If the app is open the data seems to refresh every second like shown in the app but goes back to every 15 minutes almost immediatly (after a minute or so) after the app is closed.
 4. The PowerOcean seems to have a bug where it only reports values in the API if one of the offical Apps for it are open. See [#9](https://github.com/Shaoranlaos/node-red-contrib-ecoflow-http-api/issues/9) for the curent status on this.
 4. As of June 2025 the Delta Max gives the error "current device is not allowed to get device info" on requesting data over the API. Only the status is available (via device list).
 Offical Response to this issue:
