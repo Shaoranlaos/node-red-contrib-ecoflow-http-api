@@ -22,6 +22,8 @@ module.exports = function(RED) {
         node.setQuotaSelective = (sn, values) => client.setCommandPlain({sn: sn, ...values });
         node.queryMqttCert =  () => client.getMqttCredentials()
         node.getSpecificDevice = (sn) => client.getDevice(sn);
+        node.queryMainSn = (sn) => client.requestHandler.get(
+            client.restApiHost+"/iot-open/sign/device/system/main/sn?sn="+sn);
     }
 
     RED.nodes.registerType("ecoflow-api-server", RemoteServerNode, {

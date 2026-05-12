@@ -43,6 +43,12 @@ module.exports = function(RED) {
                     case 'queryMqttCert':
                         data = await server.queryMqttCert();
                         break;
+                    case 'queryMainSn':
+                        data = await server.queryMainSn(serialNumber);
+                        data = data.data.sn;
+                        break;
+                    default:
+                        throw new Error("Unsupported function: " + func);
                 }
 
                 if (data) {
